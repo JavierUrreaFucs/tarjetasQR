@@ -1,0 +1,37 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+Usuarios
+{% endblock %}
+
+{% block content %}
+
+<h1>Registro</h1>
+<form method="POST">
+  {{ form.hidden_tag() }}
+  <div class="row">
+    <div class="py-3 col-12 col-md-4">
+      {{ form.name.label( class="form-label" ) }}
+      {{ form.name( class="form-control" ) }}
+      {% if form.name.errors %}
+      <div class="text-danger">
+        {{ form.name.errors[0] }}
+      </div>
+      {% endif %}
+    </div>
+    <div class="py-3 col-12 col-md-4">
+      {{ form.email.label( class="form-label" ) }}
+      {{ form.email( class="form-control" ) }}
+      {% if form.email.errors %}
+      <div class="text-danger">
+        {{ form.email.errors[0] }}
+      </div>
+      {% endif %}
+    </div>
+    <div class="pt-md-5 col-12 col-md-4">
+      {{ form.submit( class="btn btn-success" ) }}
+    </div>
+  </div>
+</form>
+
+{% endblock %}

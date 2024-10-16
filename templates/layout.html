@@ -18,18 +18,18 @@
           <div class="list-group list-group-flush mx-3 mt-4">
             <div class="pb-5 ">
               <a class="navbar-brand pb-5 text-nav" href="">
-                <img class="img-fluid" src="{{ url_for('static', filename='img/LOGO-FUCS.png')}}" alt="logo-fucs">
+                <img class="img-fluid" src="{{ url_for('static', filename='img/LOGO-FUCS-fondo-Azul-Fundadores.png')}}" alt="logo-fucs">
               </a>
             </div>
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Home</a>
+                <a class="nav-link text-white" href="{{ url_for('index') }}">Inicio</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link text-white" href="#">Link</a>
+                <a class="nav-link text-white" href="{{ url_for('register') }}">Usuarios</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link text-white" aria-disabled="true">Disabled</a>
+                <a class="nav-link text-white" href=""></a>
               </li>
             </ul>
           </div>
@@ -45,22 +45,16 @@
               <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <p class="px-3 pt-3 fw-bold nombre-usuario">nombre</p>
+              <p class="px-3 pt-3 fw-bold nombre-usuario">Nombre</p>
               <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-md-none px-2">
                 <li class="nav-item">
-                  <a class="nav-link text-nav" href=""><i class="bi bi-house-door"></i> Inicio</a>
+                  <a class="nav-link text-nav" href="{{ url_for('index') }}"><i class="bi bi-house-door"></i> Inicio</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link text-nav" href=""><i class="bi bi-clipboard2-plus"></i> Registro</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link text-nav" href=""><i class="bi bi-check2-square"></i> Usuarios</a>
+                  <a class="nav-link text-nav" href="{{ url_for('register') }}"><i class="bi bi-check2-square"></i> Usuarios</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link text-nav" href=""><i class="bi bi-book"></i> Programas</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link text-nav" href=""><i class=" bi bi-bar-chart-line"></i> Reportes</a>
                 </li>
               </ul>
               <ul class="navbar-nav ms-auto mb-2 mb-lg-0 px-2">

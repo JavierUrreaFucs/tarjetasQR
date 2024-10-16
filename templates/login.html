@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styleLogin.css') }}">
+  <title>Login | Tarjetas de Presentación</title>
+</head>
+
+<body>
+
+  <main class="container">
+    <article>
+      <div class="login p-3 my-5 m-auto bg-white rounded">
+        <div class="text-center">
+          <img class="img-fluid w-75 mx-auto d-block" src="{{ url_for('static', filename='img/logoFucsWhite.png') }}" alt="">
+          <h1>Tarjetas de presentación</h1>
+        </div>
+        <form method="POST">
+          {{ form.hidden_tag()}}
+          <div class="my-3">
+            {{ form.email.label(class="form-label") }}
+            {{ form.email(class="form-control") }}
+            {% if form.email.errors %}
+            <div class="text-danger">
+              {{ form.email.errors[0] }}
+            </div>
+            {% endif %}
+          </div>
+          <div class="my-3">
+            {{ form.password.label(class="form-label") }}
+            {{ form.password(class="form-control") }}
+            {% if form.password.errors %}
+            <div class="text-danger">
+              {{ form.password.errors[0] }}
+            </div>
+            {% endif %}
+          </div>
+          <div class="my-3">
+            {{ form.submit(class="btn btn-primary") }}
+          </div>
+        </form>
+        <p>¿No tiene una cuenta? <a href="{{ url_for('register') }}">Régistrese aquí</a></p>
+        <p>¿Olvidó la contraseña? <a href="{{ url_for('reset_password') }}">Ingrese aquí</a></p>
+      </div>
+    </article>
+  </main>
+  <footer class="bg-dark text-white text-center fixed-bottom p-3">Tarjetas de presentacion | &copy; todos los derechos
+    reservados | Desarrollado por la DDT</footer>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+    crossorigin="anonymous"></script>
+  <script src="../static/bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -1,18 +1,23 @@
-from flask import Flask, render_template, request, redirect, url_for, send_file, abort
+from flask import Flask, render_template, request, redirect, url_for, send_file, abort, flash
 import qrcode
 from io import BytesIO
 from flask_mysqldb import MySQL
 from PIL import Image, ImageDraw, ImageFont
+from config import Config
+from auth import LoginForm, ChangePasswordForm, RegisterForm, ResetPasswordForm
+from flask_mail import Mail, Message
+import bcrypt
 
 app = Flask(__name__)
 
 # Configuración de la base de datos MySQL
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'contact_db'
+app.config.from_object(Config)
 
+# Configuración de MySQL
 mysql = MySQL(app)
+
+# Configuración de correo
+mail = Mail(app)
 
 @app.route('/')
 def index():
@@ -124,6 +129,80 @@ END:VCARD"""
 @app.errorhandler(403)
 def forbidden(error):
     return "El contacto no está disponible.", 403
+
+# Rutas del Login 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        email = form.email.data
+        password = form.password.data
+        cursor = mysql.connection.cursor()
+        cursor.execute('SELECT * FROM users WHERE email=%s',(email,))
+        user = cursor.fetchone()
+        if user and bcrypt.checkpw(password.encode('utf-8'),user[3].encode('utf-8')):
+            if user[4] == 1:  # Suponiendo que 'first_login' es la columna 5
+                flash('Es necesario cambiar la contraseña al iniciar por primera vez.', 'warning')
+                return redirect(url_for('change_password', user_id=user[0]))
+            else:
+                # Lógica para el inicio de sesión normal
+                flash('Login successful!', 'success')
+                return redirect(url_for('index'))
+        else:
+            flash('Login unsuccessful. Please check your credentials.', 'danger')
+    return render_template('login.html', form=form)
+
+@app.route('/change_password/<int:user_id>', methods=['GET', 'POST'])
+def change_password(user_id):
+    form = ChangePasswordForm()
+    if form.validate_on_submit():
+        new_password = form.new_password.data
+        hashed_password = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
+        cursor = mysql.connection.cursor()
+        cursor.execute('UPDATE users SET password=%s, first_login=0 WHERE id=%s', (hashed_password, user_id))
+        mysql.connection.commit()
+        cursor.close()
+        flash('Contraseña actualizada con éxito.', 'success')
+        return redirect(url_for('login'))
+    return render_template('change_password.html', form=form, user_id=user_id)
+
+
+@app.route('/register', methods=['GET','POST'])
+def register():
+    form = RegisterForm()
+    if form.validate_on_submit():
+        name = form.name.data
+        email = form.email.data
+        password = "fucsalud123*"
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        cursor = mysql.connection.cursor()
+        cursor.execute('INSERT INTO users (username, email, password) VALUES (%s,%s, %s)',(name, email, hashed_password))
+        mysql.connection.commit()
+        flash('Registro exitoso. La contraseña predeterminada es "fucsalud123*', 'success')
+        return redirect(url_for('login'))
+    return render_template('register.html', form=form)
+
+@app.route('/reset_password', methods=['GET', 'POST'])
+def reset_password():
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        email = form.email.data
+        # Aqui verificas si el email existe en la base de datos
+        cursor = mysql.connection.cursor()
+        cursor.execute('SELECT * FROM users WHERE email=%s', (email,))
+        user = cursor.fetchone()
+        if user:
+            token = '13467982'  # Aquí deberías generar un token real
+            msg = Message('Solicitud de restablecimiento de contraseña', sender='noreply@demo.com', recipients=[email])
+            msg.body = f'''Para restablecer su contraseña, visite el siguiente enlace:
+http://localhost:5000/reset_password/{token}
+Si no realizó esta solicitud, simplemente ignore este correo electrónico y no se realizarán cambios..
+'''
+            mail.send(msg)
+            flash('Se ha enviado un correo electrónico con instrucciones para restablecer su contraseña.', 'info')
+        else:
+            flash('No se encontró ninguna cuenta con ese correo electrónico.', 'warning')
+    return render_template('reset_password.html', form=form)
 
 if __name__ == '__main__':
     app.run(debug=True)

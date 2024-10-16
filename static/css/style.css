@@ -136,6 +136,7 @@ footer {
 .body-recuperacion {
   height: 100%;
 }
+
 /* end login */
 
 @media screen and (min-width: 768px) {
@@ -171,6 +172,10 @@ footer {
   .menu-bg-drop{
     background-color: #FFFFFF;
     color: #0A2655;
+  }
+ 
+  .login {
+    width: 50%;
   }
 
   footer {
