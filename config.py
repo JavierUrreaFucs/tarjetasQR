@@ -11,5 +11,5 @@ class Config:
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 587
     MAIL_USE_TLS = True
-    MAIL_USERNAME = 'jhurrea@fucsalud.edu.co'
-    MAIL_PASSWORD = 'ndxr izyz gbux mgrr'
+    MAIL_USERNAME = ''
+    MAIL_PASSWORD = ''
